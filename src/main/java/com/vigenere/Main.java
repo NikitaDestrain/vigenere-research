@@ -30,7 +30,6 @@ public class Main {
         System.out.print("generating cipher text...");
         VigenereCipher vc = VigenereCipher.getInstance();
         String cipherText = vc.getCipherText(content);
-        System.out.println("  done");
 
         // prepare for writing result
         String outFullPath = Constants.FILE_PATH_OUT + "/" + encFileName;
