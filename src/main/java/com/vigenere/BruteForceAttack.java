@@ -1,5 +1,9 @@
 package com.vigenere;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 public class BruteForceAttack {
     public static void main(String[] args) {
         System.out.println("  ____             _         ______                                         \n" +
@@ -18,6 +22,16 @@ public class BruteForceAttack {
 
 
         VigenereCipher vc = VigenereCipher.getInstance();
-
+        String content = "";
+        try {
+            String inFullPath = Constants.FILE_PATH_OUT + "/" + "cipher-war-and-peace.txt";
+            System.out.println("input filepath: " + inFullPath);
+            content = new Scanner(new File(inFullPath)).useDelimiter("\\Z").next();
+        } catch (FileNotFoundException e) {
+            System.out.println("ERROR: Input file was not found! Please, move it to plaintext directory and fix Constants Class :)");
+        }
+        System.out.println("try to compute key length...");
+        BruteForceUtils bfu = BruteForceUtils.getInstance();
+        bfu.computeIndexOfCoincidence(content);
     }
 }
