@@ -24,7 +24,7 @@ public class BruteForceAttack {
         VigenereCipher vc = VigenereCipher.getInstance();
         String content = "";
         try {
-            String inFullPath = Constants.FILE_PATH_OUT + "/" + "cipher-war-and-peace.txt";
+            String inFullPath = Constants.FILE_PATH_OUT + "/" + "cipher-test2.txt";
             System.out.println("input filepath: " + inFullPath);
             content = new Scanner(new File(inFullPath)).useDelimiter("\\Z").next();
         } catch (FileNotFoundException e) {
@@ -32,6 +32,7 @@ public class BruteForceAttack {
         }
         System.out.println("try to compute key length...");
         BruteForceUtils bfu = BruteForceUtils.getInstance();
-        bfu.computeIndexOfCoincidence(content);
+        //bfu.computeIndexOfCoincidence(content);
+
     }
 }

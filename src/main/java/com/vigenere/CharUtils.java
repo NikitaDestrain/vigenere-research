@@ -24,17 +24,17 @@ public class CharUtils {
     }
 
     public char charToLower(char c) {
-        return (char) ((int) c + 32);
+        return isLower(c) ? c : (char) ((int) c + 32);
     }
 
     public char charToUpper(char c) {
-        return (char) ((int) c - 32);
+        return isUpper(c) ? c : (char) ((int) c - 32);
     }
 
     public int getCountOfCharsFromAlphabet(String text) {
         int res = 0;
-        for(Character ch: text.toCharArray()) {
-            if(isFromAlphabet(ch)) {
+        for (Character ch : text.toCharArray()) {
+            if (isFromAlphabet(ch)) {
                 ++res;
             }
         }
