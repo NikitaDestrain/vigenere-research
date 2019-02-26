@@ -38,7 +38,7 @@ public class VigenereCipher {
 
     private char[] getFixedKey(String key) {
         StringBuilder sb = new StringBuilder();
-        for (char ch : key.toCharArray()) {
+        for (char ch : key.toLowerCase().toCharArray()) {
             if (charUtils.isFromAlphabet(ch)) {
                 sb.append(ch);
             }
@@ -56,7 +56,7 @@ public class VigenereCipher {
             if (charUtils.isFromAlphabet(currentSymbol)) {
                 //key.append(prevChar);
                 boolean isUpperCase = charUtils.isUpper(currentSymbol);
-                int sumOfInd = alphabetMap.get(isUpperCase ? charUtils.charToLower(currentSymbol) : currentSymbol)
+                int sumOfInd = alphabetMap.get(charUtils.charToLower(currentSymbol))
                         + alphabetMap.get(prevChar);
                 int shift = sumOfInd > 25 ? getSymbolShift(sumOfInd) : sumOfInd;
                 char cC = alphabet[shift];
@@ -76,17 +76,18 @@ public class VigenereCipher {
     public String getCipherText(String text, String key) {
         StringBuilder sb = new StringBuilder();
         char[] plainText = text.toCharArray();
-        int ketLength = key.length();
+        int ketLength = key.length() - 1;
         int keyCounter = 0;
         char[] keyText = getFixedKey(key);
         for (char currentSymbol : plainText) {
             if (charUtils.isFromAlphabet(currentSymbol)) {
                 boolean isUpperCase = charUtils.isUpper(currentSymbol);
-                if (keyCounter > ketLength - 1) {
+                if (keyCounter > ketLength) {
                     keyCounter = 0;
                 }
-                int sumOfInd = alphabetMap.get(isUpperCase ? charUtils.charToLower(currentSymbol) : currentSymbol)
-                        + alphabetMap.get(keyText[keyCounter++]);
+                char keyChar = keyText[keyCounter++];
+                int sumOfInd = alphabetMap.get(charUtils.charToLower(currentSymbol))
+                        + alphabetMap.get(keyChar);
                 int shift = sumOfInd > 25 ? getSymbolShift(sumOfInd) : sumOfInd;
                 char cC = alphabet[shift];
                 sb.append(isUpperCase ? charUtils.charToUpper(cC) : cC);
@@ -100,17 +101,16 @@ public class VigenereCipher {
     public String getPlainText(String text, String key) {
         StringBuilder sb = new StringBuilder();
         char[] cipherText = text.toCharArray();
-        char[] keyText = key.toCharArray();
+        char[] keyText = key.toLowerCase().toCharArray();
         int j = 0;
         for (char currentSymbol : cipherText) {
             if (j >= keyText.length) {
                 j = 0;
             }
             if (charUtils.isFromAlphabet(currentSymbol)) {
-                char keySymbol = keyText[j++];
                 boolean isUpperCase = charUtils.isUpper(currentSymbol);
-                int sumOfInd = alphabetMap.get(isUpperCase ? charUtils.charToLower(currentSymbol) : currentSymbol)
-                        - alphabetMap.get(keySymbol);
+                int sumOfInd = alphabetMap.get(charUtils.charToLower(currentSymbol))
+                        - alphabetMap.get(keyText[j++]);
                 int shift = sumOfInd < 0 ? getDecipherSymbolShift(sumOfInd) : sumOfInd;
                 char cC = alphabet[shift];
                 sb.append(isUpperCase ? charUtils.charToUpper(cC) : cC);
