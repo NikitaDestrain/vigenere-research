@@ -7,15 +7,59 @@ import java.util.Map;
 
 public class BruteForceUtils {
     private static BruteForceUtils instance;
+    private VigenereCipher vigenereCipher;
     private CharUtils charUtils;
+    private String cipherText;
 
     private BruteForceUtils() {
         charUtils = CharUtils.getInstance();
+        vigenereCipher = VigenereCipher.getInstance();
     }
 
     public static BruteForceUtils getInstance() {
         if (instance == null) instance = new BruteForceUtils();
         return instance;
+    }
+
+    private String generateStringValueByNumber(long value) {
+        if (value < 27) {
+            return Character.toString((char) (value + 96));
+        } else {
+            if (value % 26 == 0) {
+                return generateStringValueByNumber((value / 26) - 1) + generateStringValueByNumber((value % 26) + 1);
+            } else {
+                return generateStringValueByNumber(value / 26) + generateStringValueByNumber(value % 26);
+            }
+        }
+    }
+
+    private boolean isDecipherValueValid(String checkValue, String key) {
+        return vigenereCipher.getPlainText(cipherText, key).contains(checkValue);
+    }
+
+    public String findKeyByCheckValue(String cipherText, String checkValue) {
+        long startTime = System.currentTimeMillis();
+        String key = "";
+        this.cipherText = cipherText;
+        long generator = 1;
+        boolean isNotFound = true;
+        while (isNotFound) {
+            String tmpKey = generateStringValueByNumber(generator);
+            System.out.print("[INFO]: test key - " + tmpKey);
+            if (!isDecipherValueValid(checkValue, tmpKey)) {
+                generator++;
+                System.out.println(" - not valid");
+            } else {
+                System.out.println(" - valid");
+                key = tmpKey;
+                isNotFound = false;
+                long timeSpent = System.currentTimeMillis() - startTime;
+                System.out.println("[RESULT]: key was found - " + key);
+                System.out.println("[STATISTIC]: time - " + timeSpent + " ms");
+                System.out.println("[STATISTIC]: number of attempts - " + generator);
+            }
+        }
+        return key;
     }
 
     // try to do IOC test
@@ -70,7 +114,7 @@ public class BruteForceUtils {
             for (double v : list) {
                 //System.out.println("key length: " + i + " iOC-" + c++ + "=" + v);
                 //if (v > 0.055 && v < 0.07) {
-                if (v!=0.0) {
+                if (v != 0.0) {
                     System.out.println(v);
                     res = i;
                     //System.out.println("HACKED for "+ i);

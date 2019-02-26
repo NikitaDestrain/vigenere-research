@@ -24,15 +24,37 @@ public class BruteForceAttack {
         VigenereCipher vc = VigenereCipher.getInstance();
         String content = "";
         try {
-            String inFullPath = Constants.FILE_PATH_OUT + "/" + "cipher-test2.txt";
+            String inFullPath = Constants.FILE_PATH_IN + "/" + "brute-force-demo";
+            //String inFullPath = Constants.FILE_PATH_IN + "/" + Constants.FILE_NAME;
             System.out.println("input filepath: " + inFullPath);
             content = new Scanner(new File(inFullPath)).useDelimiter("\\Z").next();
         } catch (FileNotFoundException e) {
             System.out.println("ERROR: Input file was not found! Please, move it to plaintext directory and fix Constants Class :)");
         }
-        System.out.println("try to compute key length...");
         BruteForceUtils bfu = BruteForceUtils.getInstance();
-        //bfu.computeIndexOfCoincidence(content);
+        Scanner scanner = new Scanner(System.in);
+        String key;
+        System.out.print("key: ");
+        key = scanner.next();
+        scanner.close();
+        System.out.println();
 
+        String cipherText = vc.getCipherText(content, key);
+        String checkValue = "[#!$CHECK VALUE$!#]";
+        String bruteForcedKey = bfu.findKeyByCheckValue(cipherText, checkValue);
+
+        /*
+        System.out.println();
+        System.out.println("Cipher text: ");
+        System.out.println("-------------start-----------");
+        System.out.println(cipherText);
+        System.out.println("--------------end------------");
+
+        System.out.println();
+        System.out.printf("Plain text deciphered by key \'%s\': \n", key);
+        System.out.println("-------------start-----------");
+        System.out.println(vc.getPlainText(cipherText, bruteForcedKey));
+        System.out.println("--------------end------------");
+        */
     }
 }
